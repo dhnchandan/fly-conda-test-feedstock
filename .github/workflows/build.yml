@@ -9,8 +9,7 @@ on:
       - main
 
 env:
-  BUILD_NAME: fly_conda_test
-  BUILD_VERSION: 0.3.0
+  BUILD_NAME: fly_conda_build_environment
 
 jobs:
   build:
@@ -29,13 +28,31 @@ jobs:
           auto-update-conda: true
           python-version: 3.9
 
-      - name: Install conda-build
-        run: conda install conda-build
+      - name: Create Conda environment
+        run: conda env create -f environment.yml
 
       - name: Build the package
-        run: conda-build recipe
+        run: |
+          conda activate ${{ env.BUILD_NAME }}
+          conda build . --output-folder ${{ github.workspace }}/conda-bld
 
-      - name: Upload package to Anaconda.org
+      - name: Upload package to Anaconda.org (Linux)
+        if: matrix.os == 'ubuntu-latest'
         env:
           ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_API_TOKEN }}
-        run: anaconda upload ~/miniconda3/conda-bld/noarch/${{ env.BUILD_NAME }}-${{ env.BUILD_VERSION }}-py_0.tar.bz2 -u firesimulations
+        run: anaconda upload ${{ github.workspace }}/conda-bld/noarch/*.tar.bz2 -u firesimulations
+        shell: bash
+
+      - name: Upload package to Anaconda.org (Mac)
+        if: matrix.os == 'macos-latest'
+        env:
+          ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_API_TOKEN }}
+        run: anaconda upload ${{ github.workspace }}/conda-bld/noarch/*.tar.bz2 -u firesimulations
+        shell: bash
+
+      - name: Upload package to Anaconda.org (Windows)
+        if: matrix.os == 'windows-latest'
+        env:
+          ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_API_TOKEN }}
+        run: anaconda upload %GITHUB_WORKSPACE%\\conda-bld\\noarch\\*.tar.bz2 -u firesimulations
+        shell: cmd
