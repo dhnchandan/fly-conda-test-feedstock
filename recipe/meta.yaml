@@ -1,0 +1,23 @@
+package:
+  name: fly_conda_test
+  version: "0.1.0"
+
+source:
+  path: ..
+
+build:
+  noarch: python
+  script: python setup.py install
+
+requirements:
+  host:
+    - python
+    - setuptools
+  run:
+    - python
+
+about:
+  home: https://github.com/dhnchandan/fly-conda-test-feedstock.git
+  license: MIT
+  license_file: LICENSE
+  summary: "Test anaconda package"
