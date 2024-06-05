@@ -59,7 +59,10 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         env:
           ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_API_TOKEN }}
-        run: anaconda upload ${{ github.workspace }}/conda-bld/noarch/*.tar.bz2 -u firesimulations
+        run: |
+          source $(conda info --base)/etc/profile.d/conda.sh
+          conda activate base
+          anaconda upload ${{ github.workspace }}/conda-bld/noarch/*.tar.bz2 -u firesimulations
         shell: bash
 
       - name: Upload package to Anaconda.org (Windows)
