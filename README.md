@@ -25,6 +25,8 @@ anaconda upload /root/miniconda3/conda-bld/noarch/fly_conda_test-0.2.0-py_0.tar.
 conda env create -f environment.yml
 
 conda activate fly_conda_build_environment
+conda deactivate
+conda remove -n fly_conda_build_environment --all
 
 anaconda login
 
