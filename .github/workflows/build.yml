@@ -1,9 +1,5 @@
 name: Build and Upload Conda Package
 
-env:
-  BUILD_NAME: fly_conda_test
-  BUILD_VERSION: 0.3.0
-
 on:
   push:
     branches:
@@ -11,6 +7,10 @@ on:
   pull_request:
     branches:
       - main
+
+env:
+  BUILD_NAME: fly_conda_test
+  BUILD_VERSION: 0.3.0
 
 jobs:
   build:
