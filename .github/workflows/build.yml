@@ -33,6 +33,7 @@ jobs:
 
       - name: Build the package
         run: |
+          conda init
           conda activate ${{ env.BUILD_NAME }}
           conda build . --output-folder ${{ github.workspace }}/conda-bld
 
