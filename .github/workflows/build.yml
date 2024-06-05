@@ -39,7 +39,7 @@ jobs:
         run: conda install conda-build
 
       - name: Build the package
-        run: conda-build recipe
+        run: conda build . --output-folder ${{ github.workspace }}/conda-bld
 
       - name: Upload package to Anaconda.org (Linux)
         if: matrix.os == 'ubuntu-latest'
