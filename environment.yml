@@ -1,0 +1,13 @@
+name: fly_conda_build_environment
+
+channels:
+  - defaults
+
+dependencies:
+  - python=3.9
+  - setuptools
+  - conda-build
+  - anaconda-client
+  - pip
+  - pip:
+    - -r requirements.txt
