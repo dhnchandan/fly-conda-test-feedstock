@@ -38,4 +38,4 @@ jobs:
       - name: Upload package to Anaconda.org
         env:
           ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_API_TOKEN }}
-        run: anaconda upload ~/miniconda3/conda-bld/noarch/${{ BUILD_NAME }}-${{ BUILD_VERSION }}-py_0.tar.bz2 -u firesimulations
+        run: anaconda upload ~/miniconda3/conda-bld/noarch/${{ env.BUILD_NAME }}-${{ env.BUILD_VERSION }}-py_0.tar.bz2 -u firesimulations
