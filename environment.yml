@@ -2,12 +2,15 @@ name: fly_conda_build_environment
 
 channels:
   - defaults
+  - conda-forge
 
 dependencies:
   - python=3.9
   - setuptools
   - conda-build
   - anaconda-client
+  - cudatoolkit
+  - cupy
   - pip
   - pip:
     - -r requirements.txt
