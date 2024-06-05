@@ -28,23 +28,29 @@ jobs:
           auto-update-conda: true
           python-version: 3.9
 
-      - name: Initialize Conda (Linux)
-        if: matrix.os == 'ubuntu-latest'
-        shell: bash
-        run: conda init bash
+      # - name: Initialize Conda (Linux)
+      #   if: matrix.os == 'ubuntu-latest'
+      #   shell: bash
+      #   run: conda init bash
 
-      - name: Initialize Conda (Windows)
-        if: matrix.os == 'windows-latest'
-        shell: powershell
-        run: conda init powershell
+      # - name: Initialize Conda (Windows)
+      #   if: matrix.os == 'windows-latest'
+      #   shell: powershell
+      #   run: conda init powershell
 
-      - name: Create Conda environment
-        run: conda env create -f environment.yml
+      # - name: Create Conda environment
+      #   run: conda env create -f environment.yml
+
+      - name: Install conda-build
+        run: conda install conda-build anaconda-client
 
       - name: Build the package
-        run: |
-          conda activate ${{ env.BUILD_NAME }}
-          conda build . --output-folder ${{ github.workspace }}/conda-bld
+        run: conda-build recipe --output-folder ${{ github.workspace }}/conda-bld
+
+      # - name: Build the package
+      #   run: |
+      #     # conda activate ${{ env.BUILD_NAME }}
+      #     conda build . --output-folder ${{ github.workspace }}/conda-bld
 
       - name: Upload package to Anaconda.org (Linux)
         if: matrix.os == 'ubuntu-latest'
