@@ -25,6 +25,16 @@ jobs:
           auto-update-conda: true
           python-version: 3.9
 
+      - name: Initialize Conda (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        shell: bash
+        run: conda init bash
+
+      - name: Initialize Conda (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: powershell
+        run: conda init powershell
+
       - name: Install conda-build
         run: conda install conda-build
 
