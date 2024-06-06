@@ -46,11 +46,16 @@ jobs:
       - name: Install conda-build
         run: conda install conda-build
 
-      - name: Build the package
+      - name: Build the package (Linux)
+        if: matrix.os == 'ubuntu-latest'
         run: |
           source $(conda info --base)/etc/profile.d/conda.sh
           conda activate base
           conda-build recipe --output-folder ${{ github.workspace }}/conda-bld
+
+      - name: Build the package (Win)
+        if: matrix.os == 'windows-latest'
+        run: conda build . --output-folder ${{ github.workspace }}/conda-bld
 
       - name: Install anaconda-client (Linux)
         if: matrix.os == 'ubuntu-latest'
