@@ -102,5 +102,5 @@ jobs:
         if: matrix.os == 'windows-latest'
         env:
           ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_API_TOKEN }}
-        run: anaconda upload %GITHUB_WORKSPACE%\\conda-bld\\**\\*.tar.bz2 -u firesimulations
+        run: anaconda upload %GITHUB_WORKSPACE%\\conda-bld\\win-64\\*.tar.bz2 -u firesimulations
         shell: powershell
