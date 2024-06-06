@@ -3,6 +3,7 @@ name: fly_conda_build_environment
 channels:
   - defaults
   - conda-forge
+  - bioconda
 
 dependencies:
   - python=3.9
@@ -11,7 +12,7 @@ dependencies:
   - anaconda-client
   - cudatoolkit
   - cupy
-  - smina
+  - mgltools
   - pip
   - pip:
     - -r requirements.txt
