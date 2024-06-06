@@ -1,12 +1,12 @@
 package:
   name: fly_conda_test
-  version: "0.6.0"
+  version: "0.7.0"
 
 source:
   path: ..
 
 build:
-  noarch: python
+  # noarch: python
   script: python setup.py install
 
 requirements:
@@ -17,7 +17,10 @@ requirements:
     - python
     - cudatoolkit
     - cupy
-    - bioconda::mgltools
+    - bioconda::mgltools # [linux]
+    - bioconda::mgltools # [osx]
+    - conda-forge::smina # [linux]
+    - conda-forge::smina # [osx]
 
 about:
   home: https://github.com/dhnchandan/fly-conda-test-feedstock.git
