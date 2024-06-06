@@ -16,87 +16,87 @@ jobs:
         os: [windows-latest]
 
     steps:
-      # - name: Checkout code
-      #   uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      # - name: Set up Miniconda
-      #   uses: conda-incubator/setup-miniconda@v3
-      #   with:
-      #     auto-update-conda: true
-      #     miniconda-version: "latest"
-      #     python-version: 3.11
-      #     channels: anaconda, conda-forge, bioconda
+      - name: Set up Miniconda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-update-conda: true
+          miniconda-version: "latest"
+          python-version: 3.11
+          channels: anaconda, conda-forge, bioconda
 
-      # - name: Initialize Conda (Linux)
-      #   if: matrix.os == 'ubuntu-latest'
-      #   shell: bash
-      #   run: conda init bash
+      - name: Initialize Conda (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        shell: bash
+        run: conda init bash
 
-      # - name: Initialize Conda (Mac)
-      #   if: matrix.os == 'macos-latest'
-      #   shell: bash -el {0}
-      #   run: conda init bash
+      - name: Initialize Conda (Mac)
+        if: matrix.os == 'macos-latest'
+        shell: bash -el {0}
+        run: conda init bash
 
-      # - name: Initialize Conda (Windows)
-      #   if: matrix.os == 'windows-latest'
-      #   shell: powershell
-      #   run: conda init powershell
+      - name: Initialize Conda (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: powershell
+        run: conda init powershell
 
-      # - name: Install conda-build
-      #   run: conda install conda-build
+      - name: Install conda-build
+        run: conda install conda-build
 
-      # - name: Build the package (Linux)
-      #   if: matrix.os == 'ubuntu-latest'
-      #   run: |
-      #     source $(conda info --base)/etc/profile.d/conda.sh
-      #     conda activate base
-      #     conda-build recipe --output-folder ${{ github.workspace }}/conda-bld
+      - name: Build the package (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          source $(conda info --base)/etc/profile.d/conda.sh
+          conda activate base
+          conda-build recipe --output-folder ${{ github.workspace }}/conda-bld
 
-      # - name: Build the package (Win)
-      #   if: matrix.os == 'windows-latest'
-      #   run: conda build . --output-folder ${{ github.workspace }}/conda-bld
+      - name: Build the package (Win)
+        if: matrix.os == 'windows-latest'
+        run: conda build . --output-folder ${{ github.workspace }}/conda-bld
 
-      # - name: Install anaconda-client (Linux)
-      #   if: matrix.os == 'ubuntu-latest'
-      #   run: |
-      #     source $(conda info --base)/etc/profile.d/conda.sh
-      #     conda activate base
-      #     conda install -y anaconda-client
-      #   shell: bash
+      - name: Install anaconda-client (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          source $(conda info --base)/etc/profile.d/conda.sh
+          conda activate base
+          conda install -y anaconda-client
+        shell: bash
 
-      # - name: Install anaconda-client (Mac)
-      #   if: matrix.os == 'macos-latest'
-      #   run: |
-      #     source $(conda info --base)/etc/profile.d/conda.sh
-      #     conda activate base
-      #     conda install -y anaconda-client
-      #   shell: bash
+      - name: Install anaconda-client (Mac)
+        if: matrix.os == 'macos-latest'
+        run: |
+          source $(conda info --base)/etc/profile.d/conda.sh
+          conda activate base
+          conda install -y anaconda-client
+        shell: bash
 
-      # - name: Install anaconda-client (Windows)
-      #   if: matrix.os == 'windows-latest'
-      #   run: |
-      #     conda install -y anaconda-client
-      #   shell: powershell
+      - name: Install anaconda-client (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          conda install -y anaconda-client
+        shell: powershell
 
-      # - name: Upload package to Anaconda.org (Linux)
-      #   if: matrix.os == 'ubuntu-latest'
-      #   env:
-      #     ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_API_TOKEN }}
-      #   run: |
-      #     source $(conda info --base)/etc/profile.d/conda.sh
-      #     conda activate base
-      #     anaconda upload ${{ github.workspace }}/conda-bld/linux-64/*.tar.bz2 -u firesimulations
-      #   shell: bash
+      - name: Upload package to Anaconda.org (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        env:
+          ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_API_TOKEN }}
+        run: |
+          source $(conda info --base)/etc/profile.d/conda.sh
+          conda activate base
+          anaconda upload ${{ github.workspace }}/conda-bld/linux-64/*.tar.bz2 -u firesimulations
+        shell: bash
 
-      # - name: Upload package to Anaconda.org (Mac)
-      #   if: matrix.os == 'macos-latest'
-      #   env:
-      #     ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_API_TOKEN }}
-      #   run: |
-      #     source $(conda info --base)/etc/profile.d/conda.sh
-      #     conda activate base
-      #     anaconda upload ${{ github.workspace }}/conda-bld/noarch/*.tar.bz2 -u firesimulations
-      #   shell: bash
+      - name: Upload package to Anaconda.org (Mac)
+        if: matrix.os == 'macos-latest'
+        env:
+          ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_API_TOKEN }}
+        run: |
+          source $(conda info --base)/etc/profile.d/conda.sh
+          conda activate base
+          anaconda upload ${{ github.workspace }}/conda-bld/noarch/*.tar.bz2 -u firesimulations
+        shell: bash
 
       - name: Dump job context
         if: matrix.os == 'windows-latest'
@@ -106,9 +106,9 @@ jobs:
           echo "${{ github.workspace }}"
         shell: powershell
 
-      # - name: Upload package to Anaconda.org (Windows)
-      #   if: matrix.os == 'windows-latest'
-      #   env:
-      #     ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_API_TOKEN }}
-      #   run: anaconda upload %GITHUB_WORKSPACE%\\conda-bld\\win-64\\*.tar.bz2 -u firesimulations
-      #   shell: powershell
+      - name: Upload package to Anaconda.org (Windows)
+        if: matrix.os == 'windows-latest'
+        env:
+          ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_API_TOKEN }}
+        run: anaconda upload ${{ github.workspace }}\\conda-bld\\win-64\\*.tar.bz2 -u firesimulations
+        shell: powershell
