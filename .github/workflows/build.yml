@@ -14,7 +14,6 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-        python-version: ["3.9", "3.11"]
 
     steps:
       - name: Checkout code
@@ -25,7 +24,7 @@ jobs:
         with:
           auto-update-conda: true
           miniconda-version: "latest"
-          python-version: ${{ matrix.python-version }}
+          python-version: 3.11
           channels: anaconda, conda-forge, bioconda
 
       - name: Initialize Conda (Linux)
