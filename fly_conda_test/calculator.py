@@ -2,6 +2,9 @@ import numpy as np
 import cupy as cp
 
 
+np.bool = np.bool_
+
+
 def add(a, b):
     """Addition function"""
     return a + b
