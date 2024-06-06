@@ -12,7 +12,8 @@ dependencies:
   - anaconda-client
   - cudatoolkit
   - cupy
+  - smina
   - mgltools
   - pip
   - pip:
-    - -r requirements.txt
+    # - -r requirements.txt
