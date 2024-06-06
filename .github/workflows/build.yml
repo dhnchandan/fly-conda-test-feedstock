@@ -26,7 +26,7 @@ jobs:
           auto-update-conda: true
           miniconda-version: "latest"
           python-version: ${{ matrix.python-version }}
-          channels: conda-forge, bioconda
+          channels: anaconda, conda-forge, bioconda
 
       - name: Initialize Conda (Linux)
         if: matrix.os == 'ubuntu-latest'

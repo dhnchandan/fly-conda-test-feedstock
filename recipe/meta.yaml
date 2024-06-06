@@ -15,8 +15,10 @@ requirements:
     - setuptools
   run:
     - python
-    - cudatoolkit
-    - cupy
+    - anaconda::cudatoolkit
+    - cupy # [linux]
+    - cupy # [win]
+    - balbasty::cupy # [osx]
     - bioconda::mgltools # [linux]
     - bioconda::mgltools # [osx]
     - conda-forge::smina # [linux]
