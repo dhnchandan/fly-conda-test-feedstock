@@ -102,6 +102,7 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: |
           echo "anaconda upload %GITHUB_WORKSPACE%\\conda-bld\\win-64\\*.tar.bz2 -u firesimulations"
+          echo "anaconda upload ${{ github.workspace }}\\conda-bld\\win-64\\*.tar.bz2 -u firesimulations"
           echo "${{ github.workspace }}"
         shell: powershell
 
