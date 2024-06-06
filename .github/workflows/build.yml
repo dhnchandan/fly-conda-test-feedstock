@@ -24,7 +24,7 @@ jobs:
         with:
           auto-update-conda: true
           python-version: 3.9
-          channels: conda-forge
+          channels: conda-forge bioconda
 
       - name: Initialize Conda (Linux)
         if: matrix.os == 'ubuntu-latest'
