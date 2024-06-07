@@ -10,7 +10,6 @@ dependencies:
   - setuptools
   - conda-build
   - anaconda-client
-  - rust
   - cudatoolkit
   - cupy
   - smina

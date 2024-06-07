@@ -1,6 +1,5 @@
 import numpy as np
 import cupy as cp
-# import fly_rust_lib
 
 
 def add(a, b):
@@ -33,7 +32,3 @@ def compute_cpu(a: int, b: int):
 def compute_gpu(a: int, b: int):
     arr = cp.random.rand(a, b)
     return cp.sum(arr ** 2)
-
-
-# def add_rust(a: int, b: int) -> int:
-#     return int(fly_rust_lib.sum_as_string(a, b))
