@@ -22,13 +22,24 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up Miniconda
+      - name: Set up Miniconda (Linux)
+        if: matrix.os == 'ubuntu-latest'
         uses: conda-incubator/setup-miniconda@v3
         with:
           auto-update-conda: true
           miniconda-version: "latest"
           activate-environment: ${{ env.BUILD_NAME }}
           environment-file: environment.yml
+          channels: anaconda, conda-forge, bioconda
+
+      - name: Set up Miniconda (Win)
+        if: matrix.os == 'windows-latest'
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-update-conda: true
+          miniconda-version: "latest"
+          activate-environment: ${{ env.BUILD_NAME }}
+          environment-file: environment_win.yml
           channels: anaconda, conda-forge, bioconda
 
       # - name: Initialize Conda (Linux)
@@ -46,9 +57,9 @@ jobs:
       #   shell: powershell
       #   run: conda init powershell
 
-      # - run: conda info
-      # - run: conda list
-      # - run: conda config --show
+      - run: conda info
+      - run: conda list
+      - run: conda config --show
 
       # - name: Build the package (Linux)
       #   if: matrix.os == 'ubuntu-latest'
