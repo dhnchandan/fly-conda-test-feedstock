@@ -5,9 +5,9 @@ package:
 source:
   path: ..
 
-# build:
-#   # noarch: python
-#   script: maturin build --release
+build:
+  # noarch: python
+  script: maturin build --release && pip install .
 
 requirements:
   host:

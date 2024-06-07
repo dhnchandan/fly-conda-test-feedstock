@@ -2,8 +2,9 @@ from setuptools import setup, find_packages
 
 setup(
     name='fly_conda_test',
-    version='0.10.1',
+    version='0.11.1',
     packages=find_packages(),
+    include_package_data=True,
     install_requires=[],
     url='https://github.com/dhnchandan/fly-conda-test-feedstock.git',
     license='MIT',
