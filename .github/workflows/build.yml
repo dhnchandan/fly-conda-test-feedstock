@@ -81,7 +81,7 @@ jobs:
           key: conda-${{ runner.os }}--${{ runner.arch }}--${{steps.get-date.outputs.today }}-${{hashFiles('environment_win.yml') }}-${{ env.CACHE_NUMBER}}
         env:
           # Increase this value to reset cache if environment_win.yml has not changed
-          CACHE_NUMBER: 0
+          CACHE_NUMBER: 1
         id: cache_win
 
       - name: Update environment (Linux)
@@ -101,6 +101,8 @@ jobs:
         run: |
           source $(conda info --base)/etc/profile.d/conda.sh
           conda activate ${{ env.BUILD_NAME }}
+          conda info
+          conda list
           conda-build recipe --output-folder ${{ github.workspace }}/conda-bld
 
       - name: Build the package (Win)
