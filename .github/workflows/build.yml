@@ -82,14 +82,14 @@ jobs:
         env:
           # Increase this value to reset cache if environment_win.yml has not changed
           CACHE_NUMBER: 0
-        id: cache
+        id: cache_win
 
       - name: Update environment (Linux)
         if: matrix.os == 'ubuntu-latest' && steps.cache.outputs.cache-hit != 'true'
         run: conda env update -n ${{ env.BUILD_NAME }} -f environment.yml
       
       - name: Update environment (Win)
-        if: matrix.os == 'windows-latest' && steps.cache.outputs.cache-hit != 'true'
+        if: matrix.os == 'windows-latest' && steps.cache_win.outputs.cache-hit != 'true'
         run: conda env update -n ${{ env.BUILD_NAME }} -f environment_win.yml
 
       - run: conda info
