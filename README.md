@@ -49,3 +49,24 @@ conda convert --platform linux-32 /root/miniconda3/envs/fly_conda_build_environm
 conda convert --platform win-32 /root/miniconda3/envs/fly_conda_build_environment/conda-bld/linux-64/fly_conda_test-0.10.0-py311_0.tar.bz2 -o dist/
 anaconda upload ./dist/*/* -u firesimulations
 ```
+
+
+## Add Rust Lib
+
+### From Scratch
+
+```shell
+cargo new --lib fly_rust_lib
+```
+
+It will create lib under fly_rust_lib folder. Move them to main folder.
+
+```shell
+cargo add pyo3
+```
+
+### By Mutarin
+
+```shell
+maturin init
+```
