@@ -29,7 +29,7 @@ jobs:
           auto-update-conda: true
           miniconda-version: "latest"
           activate-environment: ${{ env.BUILD_NAME }}
-          environment-file: environment.yml
+          # environment-file: environment.yml
           channels: anaconda, conda-forge, bioconda
 
       - name: Set up Miniconda (Win)
@@ -39,8 +39,8 @@ jobs:
           auto-update-conda: true
           miniconda-version: "latest"
           activate-environment: ${{ env.BUILD_NAME }}
-          environment-file: environment_win.yml
-          channels: anaconda, conda-forge, bioconda
+          # environment-file: environment_win.yml
+          channels: anaconda, conda-forge
 
       # - name: Initialize Conda (Linux)
       #   if: matrix.os == 'ubuntu-latest'
@@ -57,56 +57,77 @@ jobs:
       #   shell: powershell
       #   run: conda init powershell
 
+      - name: Get Date
+        id: get-date
+        run: echo "today=$(/bin/date -u '+%Y%m%d')" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: Cache Conda env (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.CONDA }}/envs
+          key: conda-${{ runner.os }}--${{ runner.arch }}--${{steps.get-date.outputs.today }}-${{hashFiles('environment.yml') }}-${{ env.CACHE_NUMBER}}
+        env:
+          # Increase this value to reset cache if environment.yml has not changed
+          CACHE_NUMBER: 0
+        id: cache
+
+      - name: Cache Conda env (Win)
+        if: matrix.os == 'windows-latest'
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.CONDA }}/envs
+          key: conda-${{ runner.os }}--${{ runner.arch }}--${{steps.get-date.outputs.today }}-${{hashFiles('environment_win.yml') }}-${{ env.CACHE_NUMBER}}
+        env:
+          # Increase this value to reset cache if environment_win.yml has not changed
+          CACHE_NUMBER: 0
+        id: cache
+
+      - name: Update environment (Linux)
+        if: matrix.os == 'ubuntu-latest' && steps.cache.outputs.cache-hit != 'true'
+        run: conda env update -n ${{ env.BUILD_NAME }} -f environment.yml
+      
+      - name: Update environment (Win)
+        if: matrix.os == 'windows-latest' && steps.cache.outputs.cache-hit != 'true'
+        run: conda env update -n ${{ env.BUILD_NAME }} -f environment_win.yml
+
       - run: conda info
       - run: conda list
       - run: conda config --show
 
-      # - name: Build the package (Linux)
-      #   if: matrix.os == 'ubuntu-latest'
-      #   run: |
-      #     source $(conda info --base)/etc/profile.d/conda.sh
-      #     conda activate ${{ env.BUILD_NAME }}
-      #     conda-build recipe --output-folder ${{ github.workspace }}/conda-bld
+      - name: Build the package (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          source $(conda info --base)/etc/profile.d/conda.sh
+          conda activate ${{ env.BUILD_NAME }}
+          conda-build recipe --output-folder ${{ github.workspace }}/conda-bld
 
-      # - name: Build the package (Win)
-      #   if: matrix.os == 'windows-latest'
-      #   run: |
-      #     conda activate ${{ env.BUILD_NAME }}
-      #     conda build . --output-folder ${{ github.workspace }}/conda-bld
+      - name: Build the package (Win)
+        if: matrix.os == 'windows-latest'
+        run: conda build . --output-folder ${{ github.workspace }}/conda-bld
 
-      # - name: Upload package to Anaconda.org (Linux)
-      #   if: matrix.os == 'ubuntu-latest'
-      #   env:
-      #     ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_API_TOKEN }}
-      #   run: |
-      #     source $(conda info --base)/etc/profile.d/conda.sh
-      #     conda activate ${{ env.BUILD_NAME }}
-      #     anaconda upload ${{ github.workspace }}/conda-bld/linux-64/*.tar.bz2 -u firesimulations
-      #   shell: bash
+      - name: Upload package to Anaconda.org (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        env:
+          ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_API_TOKEN }}
+        run: |
+          source $(conda info --base)/etc/profile.d/conda.sh
+          conda activate ${{ env.BUILD_NAME }}
+          anaconda upload ${{ github.workspace }}/conda-bld/linux-64/*.tar.bz2 -u firesimulations
+        shell: bash
 
-      # - name: Upload package to Anaconda.org (Mac)
-      #   if: matrix.os == 'macos-latest'
-      #   env:
-      #     ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_API_TOKEN }}
-      #   run: |
-      #     source $(conda info --base)/etc/profile.d/conda.sh
-      #     conda activate ${{ env.BUILD_NAME }}
-      #     anaconda upload ${{ github.workspace }}/conda-bld/noarch/*.tar.bz2 -u firesimulations
-      #   shell: bash
+      - name: Dump job context
+        if: matrix.os == 'windows-latest'
+        run: |
+          echo "anaconda upload %GITHUB_WORKSPACE%\\conda-bld\\win-64\\*.tar.bz2 -u firesimulations"
+          echo "anaconda upload ${{ github.workspace }}\\conda-bld\\win-64\\*.tar.bz2 -u firesimulations"
+          echo "${{ github.workspace }}"
+        shell: powershell
 
-      # - name: Dump job context
-      #   if: matrix.os == 'windows-latest'
-      #   run: |
-      #     echo "anaconda upload %GITHUB_WORKSPACE%\\conda-bld\\win-64\\*.tar.bz2 -u firesimulations"
-      #     echo "anaconda upload ${{ github.workspace }}\\conda-bld\\win-64\\*.tar.bz2 -u firesimulations"
-      #     echo "${{ github.workspace }}"
-      #   shell: powershell
-
-      # - name: Upload package to Anaconda.org (Windows)
-      #   if: matrix.os == 'windows-latest'
-      #   env:
-      #     ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_API_TOKEN }}
-      #   run: |
-      #     conda activate ${{ env.BUILD_NAME }}
-      #     anaconda upload ${{ github.workspace }}\\conda-bld\\win-64\\*.tar.bz2 -u firesimulations
-      #   shell: powershell
+      - name: Upload package to Anaconda.org (Windows)
+        if: matrix.os == 'windows-latest'
+        env:
+          ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_API_TOKEN }}
+        run: anaconda upload ${{ github.workspace }}\\conda-bld\\win-64\\*.tar.bz2 -u firesimulations
+        shell: powershell
