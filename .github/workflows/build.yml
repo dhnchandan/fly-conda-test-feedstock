@@ -77,7 +77,7 @@ jobs:
         shell: bash
 
       - name: Upload package to Anaconda.org (Mac)
-        if: matrix.os == 'macos'
+        if: matrix.os == 'macos-latest'
         env:
           ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_API_TOKEN }}
         run: |
