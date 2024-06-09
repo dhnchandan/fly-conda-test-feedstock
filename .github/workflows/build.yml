@@ -83,7 +83,7 @@ jobs:
         run: |
           source $(conda info --base)/etc/profile.d/conda.sh
           conda activate base
-          anaconda upload ${{ github.workspace }}/conda-bld/osx-64/*.tar.bz2 -u firesimulations
+          anaconda upload ${{ github.workspace }}/conda-bld/osx-arm64/*.tar.bz2 -u firesimulations
         shell: bash
 
       # - name: Dump job context
