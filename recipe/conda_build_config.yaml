@@ -44,6 +44,7 @@ r_base: '3.5'
 target_platform:
     - linux-64
     - osx-64
+    - osx-arm64
 zip_keys:
     -
         - cxx_compiler_version

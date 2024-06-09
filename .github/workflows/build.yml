@@ -24,8 +24,8 @@ jobs:
             double: [yes, no]
             mpi: [openmpi, nompi]
           - os: macos-latest
-            target_platform: osx-64
-            cuda_compiler_version: [none, 11.8]
+            target_platform: osx-arm64
+            cuda_compiler_version: [none]
             double: [yes, no]
             mpi: [openmpi, nompi]
 
