@@ -13,11 +13,14 @@ env:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os.runner }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest]
-        arch: [x86_64]
+        os:
+          - runner: macos-latest
+            target: x86_64
+          - runner: ubuntu-latest
+            target: x86_64
         include:
           - os: ubuntu-latest
             target_platform: linux-64
@@ -43,17 +46,17 @@ jobs:
           channels: anaconda, conda-forge
 
       # - name: Initialize Conda (Linux)
-      #   if: matrix.os == 'ubuntu-latest'
+      #   if: matrix.os.runner == 'ubuntu-latest'
       #   shell: bash
       #   run: conda init bash
 
       # - name: Initialize Conda (Mac)
-      #   if: matrix.os == 'macos-latest'
+      #   if: matrix.os.runner == 'macos-latest'
       #   shell: bash -el {0}
       #   run: conda init bash
 
       # - name: Initialize Conda (Windows)
-      #   if: matrix.os == 'windows-latest'
+      #   if: matrix.os.runner == 'windows-latest'
       #   shell: powershell
       #   run: conda init powershell
 
@@ -65,7 +68,7 @@ jobs:
       - run: conda config --show
 
       - name: Build the package
-        # if: matrix.os == 'ubuntu-latest'
+        # if: matrix.os.runner == 'ubuntu-latest'
         run: |
           source $(conda info --base)/etc/profile.d/conda.sh
           conda activate base
@@ -74,12 +77,12 @@ jobs:
           conda-build recipe --output-folder ${{ github.workspace }}/conda-bld
 
       # - name: Build the package (Win)
-      #   if: matrix.os == 'windows-latest'
+      #   if: matrix.os.runner == 'windows-latest'
       #   run: |
       #     conda build . --output-folder ${{ github.workspace }}/conda-bld
 
       - name: Upload package to Anaconda.org (Linux)
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os.runner == 'ubuntu-latest'
         env:
           ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_API_TOKEN }}
         run: |
@@ -89,7 +92,7 @@ jobs:
         shell: bash
 
       - name: Upload package to Anaconda.org (Mac)
-        if: matrix.os == 'macos-latest'
+        if: matrix.os.runner == 'macos-latest'
         env:
           ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_API_TOKEN }}
         run: |
@@ -99,7 +102,7 @@ jobs:
         shell: bash
 
       # - name: Dump job context
-      #   if: matrix.os == 'windows-latest'
+      #   if: matrix.os.runner == 'windows-latest'
       #   run: |
       #     echo "anaconda upload %GITHUB_WORKSPACE%\\conda-bld\\win-64\\*.tar.bz2 -u firesimulations"
       #     echo "anaconda upload ${{ github.workspace }}\\conda-bld\\win-64\\*.tar.bz2 -u firesimulations"
@@ -107,7 +110,7 @@ jobs:
       #   shell: powershell
 
       # - name: Upload package to Anaconda.org (Windows)
-      #   if: matrix.os == 'windows-latest'
+      #   if: matrix.os.runner == 'windows-latest'
       #   env:
       #     ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_API_TOKEN }}
       #   run: |
