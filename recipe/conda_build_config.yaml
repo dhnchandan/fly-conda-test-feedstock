@@ -1,8 +1,6 @@
 CI: azure
 c_compiler: gcc
 cdt_name: cos6
-channel_sources: conda-forge
-channel_targets: conda-forge main
 cpu_optimization_target: nocona
 cran_mirror: https://cran.r-project.org
 cuda_compiler_version:
