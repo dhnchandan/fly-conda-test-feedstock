@@ -25,7 +25,9 @@ ignore_build_only_deps:
     - python
     - numpy
 lua: '5'
-mpi: openmpi
+mpi:
+    - openmpi
+    - nompi
 mpich: '4'
 numpy: '1.22'
 openmpi: '4'
@@ -39,7 +41,9 @@ pin_run_as_build:
         min_pin: x.x
 python: '3.10'
 r_base: '3.5'
-# target_platform: linux-64
+target_platform:
+    - linux-64
+    - osx-64
 zip_keys:
     -
         - cxx_compiler_version

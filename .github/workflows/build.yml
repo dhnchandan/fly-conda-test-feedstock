@@ -17,6 +17,17 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest]
+        include:
+          - os: ubuntu-latest
+            target_platform: linux-64
+            cuda_compiler_version: [none, 11.8]
+            double: [yes, no]
+            mpi: [openmpi, nompi]
+          - os: macos-latest
+            target_platform: osx-64
+            cuda_compiler_version: [none, 11.8]
+            double: [yes, no]
+            mpi: [openmpi, nompi]
 
     steps:
       - name: Checkout Repository
