@@ -17,6 +17,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest]
+        arch: [x86_64]
         include:
           - os: ubuntu-latest
             target_platform: linux-64
@@ -24,7 +25,7 @@ jobs:
             double: [yes, no]
             mpi: [openmpi, nompi]
           - os: macos-latest
-            target_platform: osx-arm64
+            target_platform: osx-64
             cuda_compiler_version: [none]
             double: [yes, no]
             mpi: [openmpi, nompi]
@@ -94,7 +95,7 @@ jobs:
         run: |
           source $(conda info --base)/etc/profile.d/conda.sh
           conda activate base
-          anaconda upload ${{ github.workspace }}/conda-bld/osx-arm64/*.tar.bz2 -u firesimulations
+          anaconda upload ${{ github.workspace }}/conda-bld/osx-64/*.tar.bz2 -u firesimulations
         shell: bash
 
       # - name: Dump job context
