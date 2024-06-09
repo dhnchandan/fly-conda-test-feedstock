@@ -1,5 +1,49 @@
-python:
-    - 3.8
-    - 3.9
-    - 3.10
-    - 3.11
+CI: azure
+c_compiler: gcc
+cdt_name: cos6
+channel_sources: conda-forge
+channel_targets: conda-forge main
+cpu_optimization_target: nocona
+cran_mirror: https://cran.r-project.org
+cuda_compiler_version:
+    - None
+    - '11.8'
+cxx_compiler: gxx
+cxx_compiler_version: '12'
+docker_image: quay.io/condaforge/linux-anvil-cos7-x86_64
+double:
+    - 'no'
+    - 'yes'
+extend_keys:
+    - ignore_version
+    - ignore_build_only_deps
+    - pin_run_as_build
+    - extend_keys
+fftw: '3'
+fortran_compiler: gfortran
+ignore_build_only_deps:
+    - python
+    - numpy
+lua: '5'
+mpi: openmpi
+mpich: '4'
+numpy: '1.22'
+openmpi: '4'
+perl: '5.32.1'
+pin_run_as_build:
+    python:
+        max_pin: x.x
+        min_pin: x.x
+    r-base:
+        max_pin: x.x
+        min_pin: x.x
+python: '3.10'
+r_base: '3.5'
+# target_platform: linux-64
+zip_keys:
+    -
+        - cxx_compiler_version
+        - cdt_name
+        - cuda_compiler_version
+        - docker_image
+        - double

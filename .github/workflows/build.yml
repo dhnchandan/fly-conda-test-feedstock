@@ -16,7 +16,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest]
+        os: [macos-latest, ubuntu-latest]
 
     steps:
       - name: Checkout Repository
@@ -28,7 +28,7 @@ jobs:
           auto-update-conda: true
           miniconda-version: "latest"
           python-version: 3.11
-          channels: anaconda, conda-forge, bioconda
+          channels: anaconda, conda-forge
 
       # - name: Initialize Conda (Linux)
       #   if: matrix.os == 'ubuntu-latest'
@@ -52,8 +52,8 @@ jobs:
       - run: conda list
       - run: conda config --show
 
-      - name: Build the package (Linux)
-        if: matrix.os == 'ubuntu-latest'
+      - name: Build the package
+        # if: matrix.os == 'ubuntu-latest'
         run: |
           source $(conda info --base)/etc/profile.d/conda.sh
           conda activate base
@@ -61,10 +61,10 @@ jobs:
           conda list
           conda-build recipe --output-folder ${{ github.workspace }}/conda-bld
 
-      - name: Build the package (Win)
-        if: matrix.os == 'windows-latest'
-        run: |
-          conda build . --output-folder ${{ github.workspace }}/conda-bld
+      # - name: Build the package (Win)
+      #   if: matrix.os == 'windows-latest'
+      #   run: |
+      #     conda build . --output-folder ${{ github.workspace }}/conda-bld
 
       - name: Upload package to Anaconda.org (Linux)
         if: matrix.os == 'ubuntu-latest'
@@ -76,18 +76,28 @@ jobs:
           anaconda upload ${{ github.workspace }}/conda-bld/linux-64/*.tar.bz2 -u firesimulations
         shell: bash
 
-      - name: Dump job context
-        if: matrix.os == 'windows-latest'
-        run: |
-          echo "anaconda upload %GITHUB_WORKSPACE%\\conda-bld\\win-64\\*.tar.bz2 -u firesimulations"
-          echo "anaconda upload ${{ github.workspace }}\\conda-bld\\win-64\\*.tar.bz2 -u firesimulations"
-          echo "${{ github.workspace }}"
-        shell: powershell
-
-      - name: Upload package to Anaconda.org (Windows)
-        if: matrix.os == 'windows-latest'
+      - name: Upload package to Anaconda.org (Mac)
+        if: matrix.os == 'macos'
         env:
           ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_API_TOKEN }}
         run: |
-          anaconda upload ${{ github.workspace }}\\conda-bld\\win-64\\*.tar.bz2 -u firesimulations
-        shell: powershell
+          source $(conda info --base)/etc/profile.d/conda.sh
+          conda activate base
+          anaconda upload ${{ github.workspace }}/conda-bld/osx-64/*.tar.bz2 -u firesimulations
+        shell: bash
+
+      # - name: Dump job context
+      #   if: matrix.os == 'windows-latest'
+      #   run: |
+      #     echo "anaconda upload %GITHUB_WORKSPACE%\\conda-bld\\win-64\\*.tar.bz2 -u firesimulations"
+      #     echo "anaconda upload ${{ github.workspace }}\\conda-bld\\win-64\\*.tar.bz2 -u firesimulations"
+      #     echo "${{ github.workspace }}"
+      #   shell: powershell
+
+      # - name: Upload package to Anaconda.org (Windows)
+      #   if: matrix.os == 'windows-latest'
+      #   env:
+      #     ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_API_TOKEN }}
+      #   run: |
+      #     anaconda upload ${{ github.workspace }}\\conda-bld\\win-64\\*.tar.bz2 -u firesimulations
+      #   shell: powershell

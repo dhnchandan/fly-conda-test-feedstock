@@ -1,29 +1,64 @@
+{% set name = "gromacs" %}
+{% set version = "2024.2" %}
+{% set build = 0 %}
+{% set build = build + 100 %}  # [mpi == 'nompi' and double == 'no' and cuda_compiler_version == "None"]
+
 package:
   name: fly_conda_test
-  version: "0.12.0"
+  version: {{ version }}
 
 source:
-  path: ..
+  url: https://ftp.gromacs.org/gromacs/gromacs-{{ version }}.tar.gz
+  md5: b1caec2a81e221d68b3a58c53f1add40
 
 build:
-  # noarch: python
-  script: python setup.py install
+  number: {{ build }}
+  string: >-
+    nompi_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [mpi == 'nompi' and double == 'no' and cuda_compiler_version == "None"]
+    mpi_{{ mpi }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [mpi != 'nompi' and double == 'no' and cuda_compiler_version == "None"]
+    nompi_dblprec_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [mpi == 'nompi' and double == 'yes' and cuda_compiler_version == "None"]
+    mpi_{{ mpi }}_dblprec_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [mpi != 'nompi' and double == 'yes' and cuda_compiler_version == "None"]
+    nompi_cuda_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [mpi == 'nompi' and double == 'no' and cuda_compiler_version != "None"]
+  skip: true  # [win or cuda_compiler_version not in ("11.8", "None")]
+  skip: true  # [mpi == "openmpi" and arm64]
+  skip: true  # [double == "yes" and cuda_compiler_version != "None"]
 
 requirements:
+  build:
+    - make
+    - {{ compiler('cxx') }}
+    - {{ compiler('cuda') }}  # [cuda_compiler_version != "None"]
+    - cmake >=3.18.4
+    - pocl
+    - python >=3.7
+    - perl
+    - libgomp  # [linux]
+    - llvm-openmp  # [osx]
+    - coreutils  # [cuda_compiler_version != "None"]
   host:
-    - python
-    - pip
-
+    - ocl-icd  # [linux and cuda_compiler_version == "None"]
+    - khronos-opencl-icd-loader  # [osx]
+    - libhwloc 2.*
+    - fftw
+    - {{ mpi }}  # [mpi != 'nompi']
   run:
-    - python
-    - anaconda::cudatoolkit
-    - cupy # [linux]
-    - cupy # [win]
-    - balbasty::cupy # [osx]
-    - bioconda::mgltools # [linux]
-    - bioconda::mgltools # [osx]
-    - conda-forge::smina # [linux]
-    - conda-forge::smina # [osx]
+    - ocl-icd  # [linux and cuda_compiler_version == "None"]
+    - khronos-opencl-icd-loader  # [osx]
+    - ocl_icd_wrapper_apple  # [osx]
+    - fftw
+    - libhwloc 2.*
+    - {{ mpi }}  # [mpi != 'nompi']
+    - __cuda  # [not osx and cuda_compiler_version != "None"]
+
+test:
+  commands:
+    - gmx -version  # [mpi == 'nompi' and double == 'no']
+    - gmx_d -version  # [mpi == 'nompi' and double == 'yes']
+    - export OMPI_MCA_plm=isolated  # [mpi == "openmpi" and linux]
+    - export OMPI_MCA_btl_vader_single_copy_mechanism=none  # [mpi == "openmpi" and linux]
+    - export OMPI_MCA_rmaps_base_oversubscribe=yes  # [mpi == "openmpi" and linux]
+    - gmx_mpi -version  # [mpi != 'nompi' and double == 'no']
+    - gmx_mpi_d -version  # [mpi != 'nompi' and double == 'yes']:
 
 about:
   home: https://github.com/dhnchandan/fly-conda-test-feedstock.git
